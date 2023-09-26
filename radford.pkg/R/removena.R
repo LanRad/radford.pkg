@@ -5,4 +5,5 @@ removena <- function(data){
   
 }
 
+
 head(removena(surveys))
