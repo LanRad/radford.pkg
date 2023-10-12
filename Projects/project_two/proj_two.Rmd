@@ -1,0 +1,181 @@
+---
+title: "Project Two"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+```
+Questions
+
+1.) is my data loaded in?
+7. what is intraspacifif variation
+pt2 1. do you want a normal plot?
+pt2 3. are 3 and 4 supposed to be similar
+pt3 1. how to commit aand push
+```
+Due Oct. 13 at 11:59 PM. 
+
+For this first part of the exam, you can either use `surveys_complete.csv` or your own data. If you are using your own data, you must have data in which you think you have a numerical predictor variable and a numerical response variable. If you are using `surveys_complete`, you can use weight and hindfoot_length for this.
+
+Save this file in your `projects` directory. You can either save it in a project two subdirectory, or just put it in projects. Either way is fine.
+
+
+1) Load in your data. Which variable will you be using as a predictor, and which as a response? (5 pts)
+
+```{r}
+# read in data here
+#variable <- read_csv
+surveys <- na.omit(surveys)
+weight_plot <- ggplot(data=surveys, mapping= aes(x= weight, y=hindfoot_length))
+```
+
+```
+#I will say that weight predicts hindfoot length, so weight is my predictor and hindfoot length is my response.
+```
+
+2) Plot the two against each other with a scatter plot. Do the data appear to be related linearly? (5 pts)
+
+
+```{r}
+# Plot here
+weight_plot <- ggplot(data=surveys, mapping= aes(x= weight, y=hindfoot_length)) + geom_point()
+weight_plot
+
+#sort of, the data has an upward trend but I don't see a linear model.
+```
+
+```
+#Answer here
+```
+
+
+3) Fit the linear model. View the summary. (5 pts)
+
+
+```{r}
+weight_fit <- lm(weight ~ hindfoot_length, data=surveys)
+summary(weight_fit)
+```
+
+4) Does the summary make sense when you compare it to the plot you made? Does our model have good predictive power? Evaluate the residual standard error, intercept, and R-Squared in particular. Would you say your predictor predicts the response?  (10 pts)
+
+
+```
+Yes, the Pr value gives three stars of siginifacnce and the graph shows an upward trend. With an R squared value of 46% it doesn't seem like this model is the most predictive but it tells you enough. My residual standard error is 26.02, this seems like too big of an RSE to be definite proof. My intercept is basically saying when hindfoot length is 0 weight is -32.9 which physically doesn't make sense. 
+```
+
+
+5) Plot the model on the graph. Increase the size of the text so it is comfortably readable at 5 feet. Make sure axis labels are readable and not overlapping with one another. (5 pts)
+
+```{r}
+weight_plot + geom_smooth(method = "lm", color = "red", linewidth = 0.5, fill = "tomato") + annotate("text", x=20, y=30, label = "Rsquared == 0.966", parse = TRUE) + theme_bw()
+```
+
+
+6) Check the normality of the residuals. Do they look OK? Are we violating assumptions? (5 pts)
+
+```{r}
+broom::augment(weight_fit)
+aug_fit <- broom::augment(model_fit)
+qqnorm(aug_fit$.resid)
+#change to correct data
+```
+
+Why is normality of residuals important? 
+
+```
+It shows if the model you have is accurate and your predictor are respnose are related.
+```
+
+7) If you are using `surveys_complete`: Is there interspecific variation in the linear model? Hint: look at our prior work with *facet plots*. (15 pts) 
+
+If you are *not* using  `surveys_complete`: Do you think there are groupings within your data that may have a separate linear model? Try grouping the data by that variable and redoing the lm. If this would not make sense for your data, you may also attempt to do multiple predictor variables. (15 pts)
+
+```
+No, with a Multiple R squared of 0.4676, most of the data isn't explained by the model
+```
+
+## Part Two
+
+In this portion, you are free to use your own data if you have a categorical predictor variable and a response variable. Otherwise, you may use the columns sex and weight in `surveys_complete`
+
+1) First, plot the data grouped by sex (5 pts)
+
+```{r}
+weight2_plot <- ggplot(data=surveys, mapping= aes(x= sex, y=weight ,color= sex)) + geom_jitter()
+weight2_plot
+```
+
+2) Try an ANOVA of this data (5 pt)
+
+```{r}
+weight2_fit <- lm(weight ~ sex, data=surveys)
+aov(weight2_fit) -> weight2_anova
+summary(weight2_anova)
+```
+
+3) How about a linear model? What information does this give you that an ANOVA can't? (5 pts)
+
+
+```{r}
+weight2_fit <- lm(weight ~ sex, data=surveys)
+weight2_fit
+```
+
+```
+#Answer here
+```
+
+3) Plot the lm with the data, with points colored by sex. (10 pts)
+
+
+```{r}
+ggplot(surveys, aes(x = sex, y = weight, color = sex)) + geom_jitter() +
+  stat_summary(fun.data = "mean_se", color = "black") 
+```
+
+4) Choose any model we've looked at so far, but use two predictor variables. Perform an *LM*, plot the results, and state if this changes your interpretation of the relationship between variables (10 pts)
+
+```{r}
+weight3_fit <- weight_fit <- lm(weight ~ hindfoot_length + sex, data=surveys)
+```
+
+```{r}
+# Plot Code Here
+w3_plot1 <- ggplot(data=surveys, mapping= aes(x= weight, y=hindfoot_length)) + geom_point()
+wt3_plot2 <- ggplot(data=surveys, mapping= aes(x= sex, y=weight)) + geom_point()
+
+weight3_plot1 + geom_smooth(method = "lm", color = "red", linewidth = 0.5, fill = "tomato") + annotate("text", x=20, y=30, label = "Rsquared == 0.966", parse = TRUE) + theme_bw()
+
+weight3_plot2 + geom_smooth(method = "lm", color = "red", linewidth = 0.5, fill = "tomato") + annotate("text", x=20, y=30, label = "Rsquared == 0.966", parse = TRUE) + theme_bw()
+
+#grid arrange put two plots next to eachother
+```
+
+```
+# Text answer here
+```
+
+## Part Three
+
+
+1) Add and commit this document (5 pts)
+
+```
+#Commands here
+```
+
+2) Push your changes to github (10 pts)
+
+```
+#Commands here
+```
+
+
+
+# MS students
+
+My expectation is that you'll do this with your own data. If any part of this doesn't make sense with your data, please get in touch ASAP so we can work it out.
